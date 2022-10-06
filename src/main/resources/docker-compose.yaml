@@ -1,0 +1,16 @@
+version: '3.9'
+
+services:
+  mysql:
+    image: mysql:8
+    ports:
+      - "3306:3306"
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+      - ~/apps/mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=qo9sTiXR*dkge9m6mrRn
+      - MYSQL_PASSWORD=MpNB7Daz8_QL7RYWPF9E
+      - MYSQL_USER=mysql_user
+      - MYSQL_DATABASE=mysql_db
