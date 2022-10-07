@@ -1,19 +1,23 @@
 package st.cri.demoweather.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import st.cri.demoweather.repository.UserRepository;
 import st.cri.demoweather.model.User;
-import st.cri.demoweather.model.UserRole;
+import st.cri.demoweather.web.security.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
 
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+        this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
     public List<User> getAll() {
         return userRepository.findAll();
     }
@@ -23,6 +27,7 @@ public class UserService {
     }
 
     public User saveNew(User user) {
+        user.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -30,6 +35,8 @@ public class UserService {
         return getUser(user.getId()).map(updatedUser -> {
             updatedUser.setNickname(user.getNickname());
             updatedUser.setRole(user.getRole());
+            updatedUser.setEmail(user.getEmail());
+            updatedUser.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
             return userRepository.save(updatedUser);
         }).orElse(null);
     }
@@ -43,5 +50,9 @@ public class UserService {
 
     private Optional<User> getUser(int userId) {
         return userRepository.findById(userId);
+    }
+
+    public Optional<User> findByNickname(String nickname) {
+        return userRepository.findByNickname(nickname);
     }
 }

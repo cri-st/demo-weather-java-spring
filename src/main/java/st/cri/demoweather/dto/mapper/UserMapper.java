@@ -12,10 +12,13 @@ public interface UserMapper {
     @Mappings({
             @Mapping(source = "nickname", target = "nickname"),
             @Mapping(source = "role", target = "role"),
-            @Mapping(target = "id", source = "userId")
+            @Mapping(target = "id", source = "userId"),
+            @Mapping(target = "email", source = "email"),
+            @Mapping(target = "password", source = "password")
     })
     User toUser(UserDto userDto);
 
     @InheritInverseConfiguration
+    @Mapping(target = "password", ignore = true)
     UserDto toUserDto(User user);
 }

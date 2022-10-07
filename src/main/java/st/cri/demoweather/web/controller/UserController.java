@@ -1,4 +1,4 @@
-package st.cri.demoweather.controller;
+package st.cri.demoweather.web.controller;
 
 import org.springframework.web.bind.annotation.*;
 import st.cri.demoweather.dto.UserDto;
