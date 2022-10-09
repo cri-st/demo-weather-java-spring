@@ -26,7 +26,7 @@ public class DemoWeatherUserDetailsService implements UserDetailsService {
         if (user.isEmpty()) {
             throw new UsernameNotFoundException("User not found by name: " + username);
         }
-        return new User(user.get().getNickname(), passwordEncoded(user.get().getPassword()), new ArrayList<>());
+        return new User(user.get().getNickname(), user.get().getPassword(), new ArrayList<>());
     }
 
     private String passwordEncoded(String rawPassword) {

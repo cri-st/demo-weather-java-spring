@@ -27,4 +27,22 @@ public class SecurityConfiguration {
                 .and()
                 .build();
     }
+
+    @Bean
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeRequests()
+                .antMatchers("/weather").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin()
+                .permitAll()
+                .and()
+                .logout()
+                .permitAll()
+                .and()
+                .httpBasic();
+        http.csrf().disable();
+        return http.build();
+    }
 }

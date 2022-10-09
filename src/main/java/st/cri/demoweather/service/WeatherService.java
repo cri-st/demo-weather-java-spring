@@ -6,11 +6,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import st.cri.demoweather.dto.WeatherDto;
 import st.cri.demoweather.dto.mapper.CityWeatherMapper;
-import st.cri.demoweather.dto.mapper.UserMapper;
 import st.cri.demoweather.model.CityWeather;
 import st.cri.demoweather.repository.CityWeatherRepository;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
