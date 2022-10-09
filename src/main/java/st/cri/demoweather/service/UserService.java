@@ -33,9 +33,9 @@ public class UserService {
 
     public User update(User user) {
         return getUser(user.getId()).map(updatedUser -> {
-            if (user.getNickname().equals(updatedUser.getNickname())) updatedUser.setNickname(user.getNickname());
-            if (user.getRole().equals(updatedUser.getRole())) updatedUser.setRole(user.getRole());
-            if (user.getEmail().equals(updatedUser.getEmail())) updatedUser.setEmail(user.getEmail());
+            if (!user.getNickname().equals(updatedUser.getNickname())) updatedUser.setNickname(user.getNickname());
+            if (!user.getRole().equals(updatedUser.getRole())) updatedUser.setRole(user.getRole());
+            if (!user.getEmail().equals(updatedUser.getEmail())) updatedUser.setEmail(user.getEmail());
             if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().isBlank()) updatedUser.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
             return userRepository.save(updatedUser);
         }).orElse(null);

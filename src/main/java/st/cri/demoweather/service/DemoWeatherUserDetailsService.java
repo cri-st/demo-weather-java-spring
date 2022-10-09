@@ -1,35 +1,43 @@
 package st.cri.demoweather.service;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import st.cri.demoweather.web.security.PasswordEncoder;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Optional;
 
 @Service
 public class DemoWeatherUserDetailsService implements UserDetailsService {
     private final UserService userService;
-    private final PasswordEncoder passwordEncoder;
 
-    public DemoWeatherUserDetailsService(UserService userService, PasswordEncoder passwordEncoder) {
+    public DemoWeatherUserDetailsService(UserService userService) {
         this.userService = userService;
-        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<st.cri.demoweather.model.User> user = userService.findByNickname(username);
-        if (user.isEmpty()) {
+        Optional<st.cri.demoweather.model.User> optionalUser = userService.findByNickname(username);
+        if (optionalUser.isEmpty()) {
             throw new UsernameNotFoundException("User not found by name: " + username);
         }
-        return new User(user.get().getNickname(), user.get().getPassword(), new ArrayList<>());
+        st.cri.demoweather.model.User user = optionalUser.get();
+        return User.withUsername(user.getNickname())
+                .password(user.getPassword())
+                .disabled(false)
+                .authorities(getAuthorities(user))
+                .build();
     }
 
-    private String passwordEncoded(String rawPassword) {
-        return passwordEncoder.encoder().encode(rawPassword);
+    private Collection<GrantedAuthority> getAuthorities(st.cri.demoweather.model.User user){
+        Collection<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority(user.getRole().name().toUpperCase()));
+
+        return authorities;
     }
 }
