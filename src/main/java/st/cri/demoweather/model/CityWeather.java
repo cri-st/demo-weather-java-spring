@@ -8,6 +8,9 @@ import lombok.ToString;
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 
+/**
+ * The City weather.
+ */
 @Entity
 @Getter
 @Setter
@@ -15,23 +18,24 @@ import javax.validation.constraints.NotBlank;
 @RequiredArgsConstructor
 @Table(name = "city_weather")
 public class CityWeather {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Integer id;
 
-    @NotBlank
-    @Column(name = "name", nullable = false)
-    private String name;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", nullable = false)
+  private Integer id;
 
-    @NotBlank
-    @Column(name = "province", nullable = false)
-    private String province;
+  @NotBlank
+  @Column(name = "name", nullable = false)
+  private String name;
 
-    @Column(name = "temperature", nullable = false)
-    private Integer temperature;
+  @NotBlank
+  @Column(name = "province", nullable = false)
+  private String province;
 
-    @NotBlank
-    @Column(name = "weather_description", nullable = false)
-    private String weatherDescription;
+  @Column(name = "temperature", nullable = false)
+  private Integer temperature;
+
+  @NotBlank
+  @Column(name = "weather_description", nullable = false)
+  private String weatherDescription;
 }

@@ -9,51 +9,59 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 import java.util.Objects;
 
+/**
+ * The User.
+ */
 @Entity
 @Getter
 @Setter
 @ToString
 @RequiredArgsConstructor
 @Table(name = "user",
-        uniqueConstraints = {
-                @UniqueConstraint(columnNames = "nickname"),
-                @UniqueConstraint(columnNames = "email")
-        })
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "nickname"),
+        @UniqueConstraint(columnNames = "email")
+    })
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "id", nullable = false)
-    private Integer id;
 
-    @NotBlank
-    @Column(name = "nickname", nullable = false)
-    private String nickname;
+  @Id
+  @GeneratedValue(strategy = GenerationType.AUTO)
+  @Column(name = "id", nullable = false)
+  private Integer id;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "role", nullable = false, length = 20)
-    private UserRole role;
+  @NotBlank
+  @Column(name = "nickname", nullable = false)
+  private String nickname;
 
-    @NotBlank
-    @Size(max = 50)
-    @Email
-    @Column(name = "email", nullable = false)
-    private String email;
+  @Enumerated(EnumType.STRING)
+  @Column(name = "role", nullable = false, length = 20)
+  private UserRole role;
 
-    @NotBlank
-    @Size(max = 120)
-    @Column(name = "password", nullable = false)
-    private String password;
+  @NotBlank
+  @Size(max = 50)
+  @Email
+  @Column(name = "email", nullable = false)
+  private String email;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
-    }
+  @NotBlank
+  @Size(max = 120)
+  @Column(name = "password", nullable = false)
+  private String password;
 
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
+  @Override
+  public boolean equals(Object o) {
+      if (this == o) {
+          return true;
+      }
+      if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) {
+          return false;
+      }
+    final User user = (User) o;
+    return id != null && Objects.equals(id, user.id);
+  }
+
+  @Override
+  public int hashCode() {
+    return getClass().hashCode();
+  }
 }

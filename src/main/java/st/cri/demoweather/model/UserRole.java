@@ -1,6 +1,15 @@
 package st.cri.demoweather.model;
 
+/**
+ * The User role.
+ */
 public enum UserRole {
-    ADMIN,
-    STANDARD
+  /**
+   * Admin user role.
+   */
+  ADMIN,
+  /**
+   * Standard user role.
+   */
+  STANDARD
 }

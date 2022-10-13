@@ -8,51 +8,105 @@ import st.cri.demoweather.web.security.PasswordEncoder;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * The User service.
+ */
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+  private final UserRepository userRepository;
+  private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
-    public List<User> getAll() {
-        return userRepository.findAll();
-    }
+  /**
+   * Instantiates a new User service.
+   *
+   * @param userRepository  the user repository
+   * @param passwordEncoder the password encoder
+   */
+  public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    this.userRepository = userRepository;
+    this.passwordEncoder = passwordEncoder;
+  }
 
-    public User getById(Integer userId) {
-        return getUser(userId).orElse(null);
-    }
+  /**
+   * Gets all users.
+   *
+   * @return the all
+   */
+  public List<User> getAll() {
+    return userRepository.findAll();
+  }
 
-    public User saveNew(User user) {
-        user.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
-        return userRepository.save(user);
-    }
+  /**
+   * Gets a user by id.
+   *
+   * @param userId the user id
+   * @return the user by id
+   */
+  public User getById(Integer userId) {
+    return getUser(userId).orElse(null);
+  }
 
-    public User update(User user) {
-        return getUser(user.getId()).map(updatedUser -> {
-            if (!user.getNickname().equals(updatedUser.getNickname())) updatedUser.setNickname(user.getNickname());
-            if (!user.getRole().equals(updatedUser.getRole())) updatedUser.setRole(user.getRole());
-            if (!user.getEmail().equals(updatedUser.getEmail())) updatedUser.setEmail(user.getEmail());
-            if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword().isBlank()) updatedUser.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
-            return userRepository.save(updatedUser);
-        }).orElse(null);
-    }
+  /**
+   * Save new user.
+   *
+   * @param user the user
+   * @return the new user
+   */
+  public User saveNew(User user) {
+    user.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
+    return userRepository.save(user);
+  }
 
-    public boolean delete(Integer userId) {
-        return getUser(userId).map(user -> {
-            userRepository.delete(user);
-            return true;
-        }).orElse(false);
-    }
+  /**
+   * Update a user.
+   *
+   * @param user the user
+   * @return the user updated
+   */
+  public User update(User user) {
+    return getUser(user.getId()).map(updatedUser -> {
+        if (!user.getNickname().equals(updatedUser.getNickname())) {
+            updatedUser.setNickname(user.getNickname());
+        }
+        if (!user.getRole().equals(updatedUser.getRole())) {
+            updatedUser.setRole(user.getRole());
+        }
+        if (!user.getEmail().equals(updatedUser.getEmail())) {
+            updatedUser.setEmail(user.getEmail());
+        }
+        if (user.getPassword() != null && !user.getPassword().isEmpty() && !user.getPassword()
+            .isBlank()) {
+            updatedUser.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
+        }
+      return userRepository.save(updatedUser);
+    }).orElse(null);
+  }
 
-    private Optional<User> getUser(int userId) {
-        return userRepository.findById(userId);
-    }
+  /**
+   * Delete user.
+   *
+   * @param userId the user id
+   * @return true if deleted.
+   */
+  public boolean delete(Integer userId) {
+    return getUser(userId).map(user -> {
+      userRepository.delete(user);
+      return true;
+    }).orElse(false);
+  }
 
-    public Optional<User> findByNickname(String nickname) {
-        return userRepository.findByNickname(nickname);
-    }
+  private Optional<User> getUser(int userId) {
+    return userRepository.findById(userId);
+  }
+
+  /**
+   * Find by nickname.
+   *
+   * @param nickname the nickname
+   * @return the optional User
+   */
+  public Optional<User> findByNickname(String nickname) {
+    return userRepository.findByNickname(nickname);
+  }
 }

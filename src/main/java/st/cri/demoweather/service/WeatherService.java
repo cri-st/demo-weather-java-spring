@@ -13,39 +13,59 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
+/**
+ * The Weather service.
+ */
 @Service
 public class WeatherService {
 
-    private final CityWeatherMapper cityWeatherMapper;
-    private final CityWeatherRepository cityWeatherRepository;
+  private final CityWeatherMapper cityWeatherMapper;
+  private final CityWeatherRepository cityWeatherRepository;
 
-    public WeatherService(CityWeatherMapper cityWeatherMapper, CityWeatherRepository cityWeatherRepository) {
-        this.cityWeatherMapper = cityWeatherMapper;
-        this.cityWeatherRepository = cityWeatherRepository;
-    }
+  /**
+   * Instantiates a new Weather service.
+   *
+   * @param cityWeatherMapper     the city weather mapper
+   * @param cityWeatherRepository the city weather repository
+   */
+  public WeatherService(CityWeatherMapper cityWeatherMapper,
+      CityWeatherRepository cityWeatherRepository) {
+    this.cityWeatherMapper = cityWeatherMapper;
+    this.cityWeatherRepository = cityWeatherRepository;
+  }
 
-    @Scheduled(cron = "0 */5 * * * *")
-    public void updateWeather() {
-        RestTemplate restTemplate = new RestTemplate();
-        ResponseEntity<WeatherDto[]> response = restTemplate.getForEntity("https://ws.smn.gob.ar/map_items/weather", WeatherDto[].class);
-        for (WeatherDto dto: Objects.requireNonNull(response.getBody())) {
-            saveOrUpdate(cityWeatherMapper.toCityWeather(dto));
-        }
+  /**
+   * Update weather every 5 minutes.
+   */
+  @Scheduled(cron = "0 */5 * * * *")
+  public void updateWeather() {
+    final RestTemplate restTemplate = new RestTemplate();
+    final ResponseEntity<WeatherDto[]> response = restTemplate.getForEntity(
+        "https://ws.smn.gob.ar/map_items/weather", WeatherDto[].class);
+    for (final WeatherDto dto : Objects.requireNonNull(response.getBody())) {
+      saveOrUpdate(cityWeatherMapper.toCityWeather(dto));
     }
+  }
 
-    private void saveOrUpdate(CityWeather cityWeather) {
-        Optional<CityWeather> result = cityWeatherRepository.findByNameAndProvince(cityWeather.getName(), cityWeather.getProvince());
-        result.ifPresent(actualCityWeather -> {
-            actualCityWeather.setTemperature(cityWeather.getTemperature());
-            actualCityWeather.setWeatherDescription(cityWeather.getWeatherDescription());
-            cityWeatherRepository.save(actualCityWeather);
-        });
-        if (result.isEmpty()) {
-            cityWeatherRepository.save(cityWeather);
-        }
+  private void saveOrUpdate(CityWeather cityWeather) {
+    final Optional<CityWeather> result = cityWeatherRepository.findByNameAndProvince(
+        cityWeather.getName(), cityWeather.getProvince());
+    result.ifPresent(actualCityWeather -> {
+      actualCityWeather.setTemperature(cityWeather.getTemperature());
+      actualCityWeather.setWeatherDescription(cityWeather.getWeatherDescription());
+      cityWeatherRepository.save(actualCityWeather);
+    });
+    if (result.isEmpty()) {
+      cityWeatherRepository.save(cityWeather);
     }
+  }
 
-    public List<CityWeather> getAll() {
-        return cityWeatherRepository.findAll();
-    }
+  /**
+   * Gets all.
+   *
+   * @return the all
+   */
+  public List<CityWeather> getAll() {
+    return cityWeatherRepository.findAll();
+  }
 }

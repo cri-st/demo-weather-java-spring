@@ -5,6 +5,17 @@ import st.cri.demoweather.model.CityWeather;
 
 import java.util.Optional;
 
+/**
+ * The City weather repository.
+ */
 public interface CityWeatherRepository extends JpaRepository<CityWeather, Integer> {
-    Optional<CityWeather> findByNameAndProvince(String name, String province);
+
+  /**
+   * Find by name and province.
+   *
+   * @param name     the name
+   * @param province the province
+   * @return the optional City Weather
+   */
+  Optional<CityWeather> findByNameAndProvince(String name, String province);
 }

@@ -6,7 +6,17 @@ import st.cri.demoweather.model.User;
 
 import java.util.Optional;
 
+/**
+ * The User repository.
+ */
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByNickname(String nickname);
+
+  /**
+   * Find by nickname.
+   *
+   * @param nickname the nickname
+   * @return the optional User
+   */
+  Optional<User> findByNickname(String nickname);
 }
